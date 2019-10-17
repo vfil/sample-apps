@@ -46,4 +46,15 @@ search msmarco {
         }
     }
 
+    rank-profile tf inherits default {
+        function input_tensor() {
+            expression {
+                concat(elementCompleteness(body).completeness, elementCompleteness(title).completeness, d1) * tensor(d0[1])(1)
+            }
+        }
+        first-phase {
+            expression: sum(tensorflow("test_model/saved", "serving_default", "output"))
+        }
+    }
+
 }
